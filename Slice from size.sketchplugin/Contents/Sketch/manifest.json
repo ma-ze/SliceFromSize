@@ -1,0 +1,24 @@
+{
+  "name": "Slice From Size",
+  "author": "Martin Zeuner",
+  "authorEmail" : "martin.zeuner@xyrality.com",
+  "version": "1.0",
+  "identifier": "com.xy.slice-from-size",
+  "description" : "Make slices around each selected item without cutting transparent pixels.",
+  "commands": [
+    {
+      "script": "plugin.js",
+      "handler": "onRun",
+      "shortcut": "control shift k",
+      "name": "Slize From Size",
+      "identifier": "slice-from-size"
+    }
+  ],
+  "menu": {
+    "isRoot": true,
+    "items": [
+      "slice-from-size"
+    ],
+    "title": "Slice From Size"
+  }
+}
