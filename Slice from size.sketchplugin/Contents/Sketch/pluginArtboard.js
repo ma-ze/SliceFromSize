@@ -1,6 +1,6 @@
 var onRun = function(context) {
 
-    var doc = context.document, 
+        var doc = context.document, 
     page = doc.currentPage(),
     selection = context.selection, 
     view = doc.contentDrawView(),
@@ -13,20 +13,20 @@ var onRun = function(context) {
     else {
         for (var i=0; i < selection.count(); i++){
             layer = selection[i];
-            var isSliceLayer = layer.class() == MSSliceLayer
+            var isSliceLayer = layer.class() == MSArtboardGroup
             if (isSliceLayer | isAlreadySliced(layer)){
-                doc.showMessage("Selected slices and already sliced layers will be ignored");
+                doc.showMessage("Selected artboards and already converted layers will be ignored");
             }
             else{
-                makeSliceFromLayerSize(layer, true);
+                makeArtboardFromLayerSize(layer, true);
             }
         }
         page.changeSelectionBySelectingLayers(createdSlices);
         doc.showMessage("Did the thing!");
     }
 
-    function makeSliceFromLayerSize(layer, makeExportable = false){
-        //this creates a new slice that is the same name and size as the given layer
+    function makeArtboardFromLayerSize(layer, makeExportable = false){
+        //this creates a new artboard that is the same name and size as the given layer
         var layerFrame = layer.frame(),
         layerName = layer.name();
 
@@ -36,18 +36,22 @@ var onRun = function(context) {
         layerY = layerFrame.y();
 
 
-        var slice = MSSliceLayer.new(),
+        var slice = MSArtboardGroup.new(),
         sliceFrame = slice.frame();
 
         sliceFrame.setX(layerX);
         sliceFrame.setY(layerY);
         sliceFrame.setWidth(layerWidth);
         sliceFrame.setHeight(layerHeight);
-
+    
         slice.setName(layerName);
+         layer.parentGroup().removeLayer(layer);
+        slice.addLayers([layer]);
+        layer.setOrigin({x:0,y:0});
+   
         page.addLayers([slice]);
         createdSlices.push(slice);
-        
+
         if(makeExportable){
             makeLayerExportable(slice);
         }
@@ -74,11 +78,13 @@ var onRun = function(context) {
     function isAlreadySliced(layer){
         //returns true if there is a slice with the same name as the given layer and adds the slice to the list of slices
         for (var i=0; i < page.children().count(); i++){
-            if(layer.name() == page.children()[i].name() & page.children()[i].class() == MSSliceLayer){
+            if(layer.name() == page.children()[i].name() & page.children()[i].class() == MSArtboardGroup){
                 createdSlices.push(page.children()[i]);
                 return true
             }
         }
     }
+
+
 
 }
