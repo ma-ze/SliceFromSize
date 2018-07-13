@@ -17,12 +17,19 @@
       "handler": "onRun",
       "name": "Artboard From Size",
       "identifier": "artboard-from-size"
-    }
+    },
+   {
+    "script": "pluginSymbol.js",
+    "handler": "onRun",
+    "name": "Symbol From Size",
+    "identifier": "symbol-from-size"
+  }
   ],
   "menu": {
     "items": [
       "slice-from-size",
-      "artboard-from-size"
+      "artboard-from-size",
+      "symbol-from-size"
     ],
     "title": "Slice From Size"
   }

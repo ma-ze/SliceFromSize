@@ -18,7 +18,7 @@ var onRun = function(context) {
                 doc.showMessage("Selected artboards and already converted layers will be ignored");
             }
             else{
-                makeArtboardFromLayerSize(layer, true);
+                makeSymbolFromLayerSize(layer, true);
                 page.changeSelectionBySelectingLayers(createdSlices);
                 doc.showMessage("Did the thing!");
             }
@@ -26,35 +26,33 @@ var onRun = function(context) {
         
     }
 
-    function makeArtboardFromLayerSize(layer, makeExportable = false){
-        //this creates a new artboard that is the same name and size as the given layer
-        var layerFrame = layer.frame(),
-        layerName = layer.name();
+    function makeSymbolFromLayerSize(layer, makeExportable = false){
+        //this creates a new Symbol that is the same name and size as the given layer
+        var layerName = layer.name();
 
-        var layerWidth = layerFrame.width(),
-        layerHeight = layerFrame.height(),
-        layerX = layerFrame.x(),
-        layerY = layerFrame.y();
+        var layers = MSLayerArray.arrayWithLayers([layer]);
+        if (layer.class() == "MSArtboardGroup") {
+            layers = MSLayerArray.arrayWithLayers(layer.layers());
+            layer.ungroup();
+        }
 
+        if (MSSymbolCreator.canCreateSymbolFromLayers(layers)) {
+            var symbolInstance = MSSymbolCreator.createSymbolFromLayers_withName_onSymbolsPage(layers, layerName, false);
+            var symbolMaster = symbolInstance.symbolMaster();
 
-        var slice = MSArtboardGroup.new(),
-        sliceFrame = slice.frame();
+            if (layer.class() == "MSLayerGroup") {
+                var layerGroup = symbolMaster.layers().firstObject();
+                layerGroup.ungroup();
+            }
 
-        sliceFrame.setX(layerX);
-        sliceFrame.setY(layerY);
-        sliceFrame.setWidth(layerWidth);
-        sliceFrame.setHeight(layerHeight);
-    
-        slice.setName(layerName);
-         layer.parentGroup().removeLayer(layer);
-        slice.addLayers([layer]);
-        layer.setOrigin({x:0,y:0});
-   
-        page.addLayers([slice]);
-        createdSlices.push(slice);
+            symbolMaster.setRect(symbolInstance.absoluteRect().rect());
+            symbolMaster.setLayerListExpandedType(1);
+            symbolInstance.removeFromParent();
+            createdSlices.push(symbolMaster);
+        }
 
         if(makeExportable){
-            makeLayerExportable(slice);
+            makeLayerExportable(symbolMaster);
         }
     }
 

@@ -19,10 +19,11 @@ var onRun = function(context) {
             }
             else{
                 makeSliceFromLayerSize(layer, true);
+                page.changeSelectionBySelectingLayers(createdSlices);
+                doc.showMessage("Did the thing!");
             }
         }
-        page.changeSelectionBySelectingLayers(createdSlices);
-        doc.showMessage("Did the thing!");
+        
     }
 
     function makeSliceFromLayerSize(layer, makeExportable = false){
