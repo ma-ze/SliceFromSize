@@ -9,15 +9,20 @@
     {
       "script": "plugin.js",
       "handler": "onRun",
-      "shortcut": "control shift k",
       "name": "Slize From Size",
       "identifier": "slice-from-size"
+    },
+      {
+      "script": "pluginArtboard.js",
+      "handler": "onRun",
+      "name": "Artboard From Size",
+      "identifier": "artboard-from-size"
     }
   ],
   "menu": {
-    "isRoot": true,
     "items": [
-      "slice-from-size"
+      "slice-from-size",
+      "artboard-from-size"
     ],
     "title": "Slice From Size"
   }
