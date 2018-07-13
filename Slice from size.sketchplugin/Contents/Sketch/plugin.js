@@ -45,7 +45,7 @@ var onRun = function(context) {
         sliceFrame.setHeight(layerHeight);
 
         slice.setName(layerName);
-        page.addLayers(NSArray.arrayWithObjects(slice));
+        page.addLayers([slice]);
         createdSlices.push(slice);
         
         if(makeExportable){
@@ -55,10 +55,20 @@ var onRun = function(context) {
 
     function makeLayerExportable(layer){
         //this adds 2x and 3x export formats on the given layer
-        formatOptions = [];
-        formatOptions[0] = MSExportFormat.formatWithScale_name_fileFormat(2, "@2x", "PNG");
-        formatOptions[1] = MSExportFormat.formatWithScale_name_fileFormat(3, "@3x", "PNG");
-        layer.exportOptions().addExportFormats(formatOptions);
+         var size1 = layer.exportOptions().addExportFormat();
+         size1.setName("@2x");
+         size1.setAbsoluteSize(0);
+         size1.setVisibleScaleType(0);
+         size1.setFileFormat('png');
+         size1.setNamingScheme(0);
+         size1.setScale(2);
+         var size2 = layer.exportOptions().addExportFormat();
+         size2.setName("@3x");
+         size2.setAbsoluteSize(0);
+         size2.setVisibleScaleType(0);
+         size2.setFileFormat('png');
+         size2.setNamingScheme(0);
+         size2.setScale(3);
     }
 
     function isAlreadySliced(layer){
